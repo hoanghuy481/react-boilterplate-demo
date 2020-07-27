@@ -1,12 +1,17 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
+import { actDeleteItem } from '../../containers/ListPosts/actions'
 function PostItem(props) {
     let item = props.post;
+
     const handleDelete = async () => {
-       
+        props.deleteItemPost(item)
     };
+
     return (
         <tbody>
             <tr>
@@ -26,5 +31,14 @@ function PostItem(props) {
         </tbody>
     );
 }
+PostItem.propTypes = {
+    deleteItemPost: PropTypes.func,
+};
 
-export default PostItem;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deleteItemPost: item => dispatch(actDeleteItem(item))
+    };
+}
+
+export default connect(null, mapDispatchToProps)(PostItem);

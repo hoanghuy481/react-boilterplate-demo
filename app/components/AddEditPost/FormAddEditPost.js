@@ -1,17 +1,16 @@
 import React, { useReducer } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
-import { connect, useDispatch } from 'react-redux';
-// import PropTypes from 'prop-types';
 
 import { actAddItem } from '../../containers/ListPosts/actions';
 //import { makeSelectPosts } from '../../containers/ListPosts/selectors'
 
-function FormAddEditPost(props, addItem) {
+function FormAddEditPost(props) {
     const [post, setPost] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-            id: '',
-            userId: '',
+            userId: 1,
             title: '',
             body: '',
         }
@@ -22,9 +21,9 @@ function FormAddEditPost(props, addItem) {
         setPost({ [name]: newValue });
     }
     const handleSubmit = () => {
-        const dispatch = useDispatch();
-        dispatch(actAddItem(post))
+        props.addItemPost(post)
     }
+
     return (
         <Modal
             {...props}
@@ -65,17 +64,14 @@ function FormAddEditPost(props, addItem) {
     );
 }
 
-// FormAddEditPost.propTypes = {
-//     addItem: PropTypes.func
-// };
+FormAddEditPost.propTypes = {
+    addItemPost: PropTypes.func,
+};
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         addItem: (item) => {
-//             dispatch(actAddItem(item));
-//         }
-//     };
-// }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addItemPost: item => dispatch(actAddItem(item))
+    };
+}
 
-// export default connect(null, mapDispatchToProps)(FormAddEditPost);
-export default (FormAddEditPost);
+export default connect(null, mapDispatchToProps)(FormAddEditPost);
