@@ -27,7 +27,6 @@ function ListPosts({ getListPost, posts }) {
 	return (
 		<div>
 			<div className="page-header">
-				<h1>Danh sách Posts</h1>
 			</div>
 			<div className="row">
 				<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -42,8 +41,6 @@ function ListPosts({ getListPost, posts }) {
 					<tr>
 						<th scope="col">STT</th>
 						<th scope="col">Title</th>
-						<th scope="col">Created By</th>
-						<th scope="col">Total Comments</th>
 						<th scope="col">Action</th>
 					</tr>
 				</thead>
