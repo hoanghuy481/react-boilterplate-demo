@@ -24,6 +24,19 @@ const makeSelectIndex = () => createSelector(
   indexState => indexState
 );
 
+const editItem = (state) => {
+  const item = state.posts.item;
+  const posts = state.posts.posts;
+  const index = posts.map(post => { return post.id; }).indexOf(item.id)
+  posts[index] = item
+  return posts
+}
+const makeEditItem = () => createSelector(
+  editItem,
+  postsState => postsState
+);
 
-export { selectPosts, makeSelectPosts, makeGetItem,makeSelectIndex, getIndexItem };
+
+
+export { selectPosts, makeSelectPosts, makeGetItem, makeSelectIndex, getIndexItem, makeEditItem, editItem };
 

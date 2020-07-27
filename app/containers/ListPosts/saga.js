@@ -1,9 +1,9 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import axios from "axios";
 
-import { FETCH_LISTPOSTS, ADD_LISTPOSTS, DELETE_LISTPOSTS } from './constants';
+import { FETCH_LISTPOSTS, ADD_LISTPOSTS, DELETE_LISTPOSTS, EDIT_LISTPOSTS } from './constants';
 import { actGetListPostSuccess, actGetListPostFail } from './actions';
-import { makeGetItem, makeSelectPosts, makeSelectIndex } from './selectors';
+import { makeGetItem, makeSelectPosts, makeSelectIndex, makeEditItem } from './selectors';
 import { reqListPosts } from '../../utils/request';
 
 
@@ -47,8 +47,24 @@ export function* deleteItemPost() {
     }
 }
 
+export function* editItemPost() {
+    const item = yield select(makeGetItem());
+    const posts = yield select(makeEditItem());
+    const requestURL = `https://jsonplaceholder.typicode.com/posts/${item.id}`;
+    try {
+        yield call(() => axios.put(requestURL, item));
+        console.log(posts);
+        yield put(actGetListPostSuccess(posts));
+    } catch (err) {
+        yield put(actGetListPostFail(err));
+    }
+}
+
+
+
 export default function* postsData() {
     yield takeLatest(FETCH_LISTPOSTS, getListPosts);
     yield takeLatest(ADD_LISTPOSTS, addItemPost);
     yield takeLatest(DELETE_LISTPOSTS, deleteItemPost);
+    yield takeLatest(EDIT_LISTPOSTS, editItemPost);
 }

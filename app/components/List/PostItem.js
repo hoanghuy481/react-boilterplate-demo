@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { actDeleteItem } from '../../containers/ListPosts/actions'
+import { actDeleteItem } from '../../containers/ListPosts/actions';
+import FormAddEditPost from '../../components/AddEditPost/FormAddEditPost';
+
 function PostItem(props) {
+    const [modalShow, setModalShow] = useState(false);
     let item = props.post;
 
     const handleDelete = async () => {
@@ -25,6 +28,7 @@ function PostItem(props) {
                     <Button variant="warning" onClick={() => setModalShow(true)}>
                         Edit
                     </Button>
+                    <FormAddEditPost show={modalShow} onHide={() => setModalShow(false)} post={item} />
                     <button onClick={handleDelete} className="btn btn-danger" type="button">Delete</button>
                 </td>
             </tr>

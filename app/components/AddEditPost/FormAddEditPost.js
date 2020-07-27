@@ -1,12 +1,14 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
+import { isEmpty as _isEmpty } from 'lodash';
 
-import { actAddItem } from '../../containers/ListPosts/actions';
+import { actAddItem, actEdititem } from '../../containers/ListPosts/actions';
 //import { makeSelectPosts } from '../../containers/ListPosts/selectors'
 
 function FormAddEditPost(props) {
+    let item = props.post;
     const [post, setPost] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
@@ -15,13 +17,31 @@ function FormAddEditPost(props) {
             body: '',
         }
     );
+    useEffect(() => {
+        if (!_isEmpty(item)) {
+            setPost(item)
+        }
+    }, [])
     const handleChange = evt => {
         const name = evt.target.name;
         const newValue = evt.target.value;
         setPost({ [name]: newValue });
     }
     const handleSubmit = () => {
-        props.addItemPost(post)
+        if (!_isEmpty(post.title, post.body)) {
+            if (!_isEmpty(item)) {
+                props.editItemPost(post);
+                alert('Sửa post thành công');
+                props.onHide();
+            } else {
+                props.addItemPost(post);
+                alert('Thêm post thành công');
+                props.onHide();
+            }
+        } else {
+            alert('vui lòng điền đầy đủ thông tin')
+        }
+
     }
 
     return (
@@ -66,11 +86,13 @@ function FormAddEditPost(props) {
 
 FormAddEditPost.propTypes = {
     addItemPost: PropTypes.func,
+    editItemPost: PropTypes.func
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addItemPost: item => dispatch(actAddItem(item))
+        addItemPost: item => dispatch(actAddItem(item)),
+        editItemPost: item => dispatch(actEdititem(item)),
     };
 }
 
