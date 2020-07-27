@@ -1,43 +1,67 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { Button } from 'react-bootstrap';
 
+import FormAddEditPost from '../../components/AddEditPost/FormAddEditPost';
 import PostItem from '../../components/List/PostItem';
 import { actGetListPost } from './actions';
+import { makeSelectPosts } from './selectors'
 
-export function ListPosts({ getListPost }) {
-  useEffect(()=>{
+function ListPosts({ getListPost, posts }) {
+  const [modalShow, setModalShow] = useState(false);
+
+  useEffect(() => {
     getListPost();
-  })
+  }, [])
+
+  let xPostItem = posts;
+  xPostItem = posts
+    .map((post, i) => {
+      return (
+        <PostItem key={i} index={i} post={post} />
+      );
+    });
 
   return (
     <div>
       <div className="page-header">
         <h1>Danh sách Posts</h1>
       </div>
+      <div className="row">
+        <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+          <Button variant="btn btn-success btn-block" onClick={() => setModalShow(true)}>
+            Add Post
+          </Button>
+          <FormAddEditPost show={modalShow} onHide={() => setModalShow(false)} />
+        </div>
+      </div>
       <table className="table">
         <thead>
           <tr>
             <th scope="col">STT</th>
             <th scope="col">Title</th>
-            <th scope="col">Created Date</th>
             <th scope="col">Created By</th>
             <th scope="col">Total Comments</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
-        <PostItem />
+        {xPostItem}
       </table>
-
     </div>
   );
 }
 
 ListPosts.propTypes = {
-  getListPost: PropTypes.func,
+  getListPosts: PropTypes.func,
+  posts: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
 };
 
-function mapDispatchToProps(dispatch) {
+const mapStateToProps = createStructuredSelector({
+  posts: makeSelectPosts()
+});
+const mapDispatchToProps = (dispatch) => {
   return {
     getListPost: () => {
       dispatch(actGetListPost());
@@ -45,4 +69,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(ListPosts);
+export default connect(mapStateToProps, mapDispatchToProps)(ListPosts);

@@ -1,4 +1,4 @@
-import { FETCH_LISTPOSTS, FETCH_LISTPOSTS_SUCCESS, FETCH_LISTPOSTS_FAIL } from './constants';
+import { FETCH_LISTPOSTS, FETCH_LISTPOSTS_SUCCESS, FETCH_LISTPOSTS_FAIL, ADD_LISTPOSTS } from './constants';
 
 export function actGetListPost() {
   return {
@@ -17,5 +17,12 @@ export function actGetListPostFail(error) {
   return {
     type: FETCH_LISTPOSTS_FAIL,
     error,
+  };
+}
+
+export function actAddItem(item) {
+  return {
+    type: ADD_LISTPOSTS,
+    item
   };
 }

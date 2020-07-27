@@ -4,6 +4,7 @@ import { FETCH_LISTPOSTS, FETCH_LISTPOSTS_SUCCESS, FETCH_LISTPOSTS_FAIL } from '
 export const initialState = {
     loading: false,
     posts: [],
+    item: {},
     error: false,
 };
 
@@ -16,10 +17,8 @@ const postsReducer = (state = initialState, action) =>
                 break;
 
             case FETCH_LISTPOSTS_SUCCESS:
-                draft.posts = action.posts
+                draft.posts = [...action.posts]
                 draft.loading = false;
-                console.log(action.posts);
-                
                 break;
 
             case FETCH_LISTPOSTS_FAIL:

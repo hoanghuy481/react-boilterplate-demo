@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { FETCH_LISTPOSTS } from './constants';
 import { actGetListPostSuccess, actGetListPostFail } from './actions';
 
@@ -12,7 +12,6 @@ export function* getListPosts() {
     } catch (err) {
         yield put(actGetListPostFail(err));
     }
-  
 }
 
 export default function* postsData() {
