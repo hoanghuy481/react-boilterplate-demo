@@ -9,6 +9,8 @@ import { actAddItem, actEdititem } from '../../containers/ListPosts/actions';
 
 function FormAddEditPost(props) {
     let item = props.post;
+    console.log();
+    
     const [post, setPost] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
@@ -21,7 +23,7 @@ function FormAddEditPost(props) {
         if (!_isEmpty(item)) {
             setPost(item)
         }
-    }, [])
+    }, [props.show])
     const handleChange = evt => {
         const name = evt.target.name;
         const newValue = evt.target.value;
