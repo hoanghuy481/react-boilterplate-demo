@@ -1,48 +1,26 @@
 import {
-  FETCH_LISTPOSTS,
-  FETCH_LISTPOSTS_SUCCESS,
-  FETCH_LISTPOSTS_FAIL,
-  ADD_LISTPOSTS,
-  DELETE_LISTPOSTS,
-  EDIT_LISTPOSTS
+  FETCH_POST,
+  FETCH_POST_SUCCESS,
+  FETCH_POST_FAIL,
 } from './constants';
 
-export function actGetListPost() {
+export function actGetPost(id) {
   return {
-    type: FETCH_LISTPOSTS,
+    type: FETCH_POST,
+    id,
   };
 }
 
-export function actGetListPostSuccess(posts) {
+export function actGetPostSuccess(post) {
   return {
-    type: FETCH_LISTPOSTS_SUCCESS,
-    posts,
+    type: FETCH_POST_SUCCESS,
+    post,
   };
 }
 
-export function actGetListPostFail(error) {
+export function actGetPostFail(error) {
   return {
-    type: FETCH_LISTPOSTS_FAIL,
+    type: FETCH_POST_FAIL,
     error,
-  };
-}
-
-export function actAddItem(item) {
-  return {
-    type: ADD_LISTPOSTS,
-    item
-  };
-}
-export function actDeleteItem(item) {
-  return {
-    type: DELETE_LISTPOSTS,
-    item
-  };
-}
-
-export function actEdititem(item) {
-  return {
-    type: EDIT_LISTPOSTS,
-    item
   };
 }

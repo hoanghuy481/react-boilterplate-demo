@@ -10,19 +10,29 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import ListPosts from 'containers/ListPosts/Loadable';
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import routes from './routes'
 import Footer from 'components/Footer';
 
 import GlobalStyle from '../../global-styles';
 
 export default function App() {
+  const showRoute= (routes) =>{
+    let xhtml = null;
+    if(routes.length > 0 ){
+      xhtml = routes.map((route, index)=> {
+        return (
+          <Route key={index} exact={route.exact} path={route.path} component={route.main}/>
+        );
+      });
+    }
+    return <Switch>{xhtml}</Switch>;
+  }
+  
   return (
     <div>
       <Footer />
       <Switch>
-        <Route exact path="/" component={ListPosts} />
-        <Route component={NotFoundPage} />
+        {showRoute(routes)}
       </Switch>
       <GlobalStyle />
     </div>

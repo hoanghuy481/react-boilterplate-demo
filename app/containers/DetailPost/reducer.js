@@ -1,46 +1,31 @@
-import listPost from 'immer';
+import post from 'immer';
 import {
-    FETCH_LISTPOSTS,
-    FETCH_LISTPOSTS_SUCCESS,
-    FETCH_LISTPOSTS_FAIL,
-    ADD_LISTPOSTS,
-    DELETE_LISTPOSTS,
-    EDIT_LISTPOSTS
+    FETCH_POST,
+    FETCH_POST_SUCCESS,
+    FETCH_POST_FAIL,
 } from './constants';
 
 export const initialState = {
     loading: false,
-    posts: [],
-    item: {},
-    error: false,
+    post: {},
+    id: {},
+    error: false,  
 };
-
 /* eslint-disable default-case, no-param-reassign */
 const postsReducer = (state = initialState, action) =>
-    listPost(state, draft => {
+    post(state, draft => {
         switch (action.type) {
-            case FETCH_LISTPOSTS:
+            case FETCH_POST:
                 draft.loading = true;
+                draft.id = action.id
                 break;
-            case FETCH_LISTPOSTS_SUCCESS:
-                draft.posts = [...action.posts]
+            case FETCH_POST_SUCCESS:
+                draft.post = action.post
                 draft.loading = false;
                 break;
-            case FETCH_LISTPOSTS_FAIL:
-                draft.error = action.error;
+            case FETCH_POST_FAIL:
+                draft.error = true;
                 draft.loading = false;
-                break;
-            case ADD_LISTPOSTS:
-                draft.loading = true;
-                draft.item = action.item
-                break;
-            case DELETE_LISTPOSTS:
-                draft.loading = true;
-                draft.item = action.item
-                break;
-            case EDIT_LISTPOSTS:
-                draft.loading = true;
-                draft.item = action.item
                 break;
         }
     });

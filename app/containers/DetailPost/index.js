@@ -1,88 +1,96 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import React, { useState, useEffect } from 'react';
+import { isEmpty as _isEmpty } from 'lodash';
 import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
 
+import { actDeleteItem } from '../../containers/ListPosts/actions';
+import { actGetPost } from './actions';
 import FormAddEditPost from '../../components/AddEditPost/FormAddEditPost';
-import PostItem from '../../components/PostItem/index';
-import { actGetListPost } from './actions';
-import { makeSelectPosts, makeSelectLoading, makeSelectError } from './selectors';
-import ReposList from '../../components/ReposList';
-import Pagination from '../../components/Panigation/index';
+import { makeSelectDetailPost } from './selectors';
+import saga from './saga';
+import reducer from './reducer';
+import { useInjectSaga } from 'utils/injectSaga';
+import { useInjectReducer } from 'utils/injectReducer';
 
-function ListPosts({ getListPost, posts, loading, error }) {
+function DetailPost({ getPost, deleteItemPost, match, post }) {
+	const key = 'DetailPost';
 	const [modalShow, setModalShow] = useState(false);
-	const [currentPage, setCurrentPage] = useState(1); // page hien tai
-	const [postPerPage] = useState(10);
-
-	const indexOfLastPost = currentPage * postPerPage;
-	const indexOfFirstPost = indexOfLastPost - postPerPage;
-	const currentPost = posts.slice(indexOfFirstPost, indexOfLastPost);
-	const paginate = pageNumber => setCurrentPage(pageNumber);
-
-	const reposListProps = { loading, error };
+	let item = {}
+	useInjectSaga({ key, saga });
+	useInjectReducer({ key, reducer });
 
 	useEffect(() => {
-		getListPost();
+		getPost(match.params.id);
 	}, [])
 
-	let xPostItem = [];
-	xPostItem = currentPost.map((post, i) => {
-		return (
-			<PostItem key={i} index={i} post={post} />
-		);
-	});
-
+	const handleDelete = async () => {
+		deleteItemPost(item)
+	};
+	
+	if(!_isEmpty(post)){
+		item = post
+		console.log(item);
+	}
+	
 	return (
 		<div>
-			<ReposList {...reposListProps} />
-			<div className="row">
-				<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-					<Button variant="btn btn-success btn-block" onClick={() => setModalShow(true)}>
-						Add Post
-          			</Button>
-					<FormAddEditPost show={modalShow} onHide={() => setModalShow(false)} />
+			<h1>Chi tiết Post</h1>
+			<form>
+				<div className="form-group row">
+					<label className="col-sm-2 col-form-label">ID</label>
+					<div className="col-sm-10">
+						<input type="text" readOnly className="form-control-plaintext" defaultValue={item.id} />
+					</div>
 				</div>
-			</div>
-			<table className="table">
-				<thead>
-					<tr>
-						<th scope="col">STT</th>
-						<th scope="col">Title</th>
-						<th scope="col">Action</th>
-					</tr>
-				</thead>
-				{xPostItem}
-			</table>
-			<Pagination
-				postPerPost={postPerPage}
-				totalPost={posts.length}
-				paginate={paginate}
-			/>
+				<div className="form-group row">
+					<label className="col-sm-2 col-form-label">Title</label>
+					<div className="col-sm-10">
+						<input type="text" readOnly className="form-control-plaintext" defaultValue={item.title} />
+					</div>
+				</div>
+				<div className="form-group row">
+					<label className="col-sm-2 col-form-label">Body</label>
+					<div className="col-sm-10">
+						<input type="text" readOnly className="form-control-plaintext" defaultValue={item.body} />
+					</div>
+				</div>
+				<div className="form-group row">
+					<label className="col-sm-2 col-form-label">User ID</label>
+					<div className="col-sm-10">
+						<input type="text" readOnly className="form-control-plaintext" defaultValue={item.userId} />
+					</div>
+				</div>
+				<div className="form-group row">
+					<div className="col-sm-10">
+						<Button variant="warning" onClick={() => setModalShow(true)}>
+							Edit
+                    	</Button>
+						<FormAddEditPost show={modalShow} onHide={() => setModalShow(false)} post={item} />
+						<button onClick={handleDelete} className="btn btn-danger" type="button">Delete</button>
+					</div>
+				</div>
+			</form>
 		</div>
+
 	);
 }
 
-ListPosts.propTypes = {
-	getListPosts: PropTypes.func,
-	loading: PropTypes.bool,
-	error: PropTypes.bool,
-	posts: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
-};
 
+DetailPost.propTypes = {
+	deleteItemPost: PropTypes.func,
+	getPost: PropTypes.func,
+};
 const mapStateToProps = createStructuredSelector({
-	posts: makeSelectPosts(),
-	loading: makeSelectLoading(),
-	error: makeSelectError(),
+	post: makeSelectDetailPost(),
 
 });
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchTopost = (dispatch) => {
 	return {
-		getListPost: () => {
-			dispatch(actGetListPost());
-		}
+		deleteItemPost: item => dispatch(actDeleteItem(item)),
+		getPost: id => dispatch(actGetPost(id))
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListPosts);
+export default connect(mapStateToProps, mapDispatchTopost)(DetailPost);

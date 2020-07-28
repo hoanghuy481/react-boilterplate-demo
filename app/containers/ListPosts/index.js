@@ -4,14 +4,18 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Button } from 'react-bootstrap';
 
+
 import FormAddEditPost from '../../components/AddEditPost/FormAddEditPost';
 import PostItem from '../../components/PostItem/index';
 import { actGetListPost } from './actions';
 import { makeSelectPosts, makeSelectLoading, makeSelectError } from './selectors';
 import ReposList from '../../components/ReposList';
 import Pagination from '../../components/Panigation/index';
+import saga from './saga';
+import { useInjectSaga } from 'utils/injectSaga';
 
 function ListPosts({ getListPost, posts, loading, error }) {
+	const key = 'ListPosts';
 	const [modalShow, setModalShow] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1); // page hien tai
 	const [postPerPage] = useState(10);
@@ -22,10 +26,12 @@ function ListPosts({ getListPost, posts, loading, error }) {
 	const paginate = pageNumber => setCurrentPage(pageNumber);
 
 	const reposListProps = { loading, error };
-
+	useInjectSaga({ key, saga });
 	useEffect(() => {
 		getListPost();
 	}, [])
+	console.log(posts);
+	
 
 	let xPostItem = [];
 	xPostItem = currentPost.map((post, i) => {
