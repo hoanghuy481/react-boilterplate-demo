@@ -15,7 +15,7 @@ export default defineMessages({
   authorMessage: {
     id: `${scope}.author.message`,
     defaultMessage: `
-      Made with love by {author}.
+      Made with love by.
     `,
   },
 });

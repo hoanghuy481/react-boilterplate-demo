@@ -15,7 +15,6 @@ import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Footer from 'components/Footer';
 
 import GlobalStyle from '../../global-styles';
-import { set } from 'lodash';
 
 export default function App() {
   return (

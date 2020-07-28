@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { actDeleteItem } from '../../containers/ListPosts/actions';
-import FormAddEditPost from '../../components/AddEditPost/FormAddEditPost';
+import FormAddEditPost from '../AddEditPost/FormAddEditPost';
 
 function PostItem(props) {
     const [modalShow, setModalShow] = useState(false);
